@@ -1,22 +1,41 @@
 const { Router } = require('express');
-const router = Router();
-const Contenedor = require('../../src/contenedor')
-const contenedor = new Contenedor.Contenedor('./src/productos.txt')
+const productosRouter = Router();
+const Contenedor = require('../models/contenedor')
+const {authValidator} = require ('../middlewares/auth-mw')
+const contenedor = new Contenedor.Contenedor('./src/models/productos.txt')
 
 
-router.get('/', async (req, res) => {
-  const productos = await contenedor.getData()
-  res.render('form.handlebars',{ ListProduct: productos})
+
+productosRouter.get('/:id', async (req, res) => {
+  const id = parseInt(req.params.id)
+  const producto = await contenedor.getById(id)
+  res.json({"Producto encontrado": producto})
 });
 
-router.get('/productos', async (req, res) => {
+productosRouter.get('/', async (req, res) => {
   const productos = await contenedor.getData()
-  res.render('products.handlebars', { ListProduct: productos })
+  res.json({'Productos': productos })
 })
 
-router.post('/productos', (req, res) => {
-  contenedor.save(req.body)
-  res.redirect('/')
+productosRouter.post('/productos', authValidator, (req, res) => {
+  const productoNuevo = req.body 
+  contenedor.save(productoNuevo)
+  res.json({"producto agregado" : productoNuevo})         
 })
 
-module.exports = router;
+productosRouter.put('/:id' , authValidator,async (req , res)=>{
+  const id = parseInt(req.params.id)
+  const newData = req.body 
+  const productoActualizado = await contenedor.updateById(id , newData)
+  res.json({"producto actualizado" : productoActualizado})
+})
+
+
+productosRouter.delete('/:id' , authValidator,async (req , res)=>{
+  const id = parseInt(req.params.id)
+  const productoEliminado = await contenedor.deleteById(id)
+  res.json({"producto actualizado" : productoEliminado})
+})
+
+
+module.exports ={productosRouter};
