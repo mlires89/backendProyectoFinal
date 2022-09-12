@@ -85,15 +85,14 @@ class CartContainer {
 
 
 
-   async updateById(id , newData){
+   async updateById(cartId , newData){
     try {
             const lista = await this.getData();
-            const indiceObjeto = lista.findIndex( e => e.id == id);  
+            const indiceObjeto = lista.findIndex( e => e.id == cartId);  
             lista.splice(indiceObjeto , 1 , newData)
             await this.deleteAll()
             await fs.promises.writeFile(`./${this.ruta}`, JSON.stringify(lista));
-           
-            return id
+            return cartId
     
         } catch (error) {
             throw new Error (`No se puede actualizar: ${error}`);  
@@ -109,7 +108,7 @@ class CartContainer {
     async addProducts (cartId, productsToAdd){
         const cartFounded = await this.getById(cartId)
         cartFounded
-            ? cartFounded.productos.push(productsToAdd)
+            ? productsToAdd.forEach(p=>cartFounded.productos.push(p)) 
             : console.log(err)
         const modifiedId = this.updateById(cartId,cartFounded)    
         return modifiedId    
