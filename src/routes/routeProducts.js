@@ -17,10 +17,10 @@ productosRouter.get('/', async (req, res) => {
   res.json({'Productos': productos })
 })
 
-productosRouter.post('/productos', authValidator, (req, res) => {
+productosRouter.post('/', authValidator, async (req, res) => {
   const productoNuevo = req.body 
-  contenedor.save(productoNuevo)
-  res.json({"producto agregado" : productoNuevo})         
+  const idCreated= await contenedor.save(productoNuevo)
+  res.json({"ID producto agregado" : idCreated})         
 })
 
 productosRouter.put('/:id' , authValidator,async (req , res)=>{
@@ -34,7 +34,7 @@ productosRouter.put('/:id' , authValidator,async (req , res)=>{
 productosRouter.delete('/:id' , authValidator,async (req , res)=>{
   const id = parseInt(req.params.id)
   const productoEliminado = await contenedor.deleteById(id)
-  res.json({"producto actualizado" : productoEliminado})
+  res.json({"producto eliminado" : productoEliminado})
 })
 
 

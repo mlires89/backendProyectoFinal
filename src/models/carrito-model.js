@@ -79,7 +79,21 @@ class CartContainer {
     } catch (error) {
         throw new Error (`No se puede actualizar: ${error}`);  
     }
-}
+    }
+
+    async deleteById(cartId){              
+        try {
+            const cartList = await this.getData();
+            const cart =  await this.getById(cartId)
+            const cartIndex = cartList.findIndex(object => object.id === cartId);    
+            cartList.splice(cartIndex, 1)
+            await this.deleteAll()
+            await fs.promises.writeFile(`./${this.ruta}`, JSON.stringify(cartList));
+            return cart.id
+        } catch (error) {
+            throw new Error (`No se puede actualizar: ${error}`);  
+        }
+        }
 
 
 

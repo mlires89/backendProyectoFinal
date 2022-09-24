@@ -76,7 +76,7 @@ class Contenedor {
             console.log ('No se encontró el elemento')
         }
         else{
-            elementoEliminado = this.getById(index)
+            const elementoEliminado = this.getById(index)
             data.splice(index, 1)
             let objectJSON = JSON.stringify(data);
 

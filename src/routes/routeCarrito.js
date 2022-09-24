@@ -25,6 +25,16 @@ carritoRouter.get('/:id/productos', async (req,res)=>{
     res.json({productos})
 })
 
+// creo este endpoint para facilitar los resultados de las pruebas
+
+carritoRouter.get('/', async (req,res)=>{
+
+    const cartList = await cartContainer.getData()
+    res.json({cartList})
+})
+
+/**************************************************************/
+
 carritoRouter.post('/:id/productos', async (req,res)=>{
     const cartId = parseInt(req.params.id)
     const productsToAdd = req.body
@@ -36,7 +46,7 @@ carritoRouter.post('/:id/productos', async (req,res)=>{
 carritoRouter.delete('/:id/productos/:id_prod',async (req,res)=>{
     const cartId = parseInt(req.params.id)
     const productId = parseInt(req.params.id_prod)
-    const idProductoDeleted = await cartContainer.deleteProduct(cartId,productId)
-    res.json({"Producto Eliminado": idProductoDeleted})
+    const idDeleted = await cartContainer.deleteProduct(cartId,productId)
+    res.json({"Producto Eliminado del carrito": idDeleted})
 })
 module.exports ={carritoRouter}

@@ -1,5 +1,7 @@
 const authValidator = (req,res,next) =>{
-    const {administrator} = req.body
+    //mas adelante obtendrá la variable administrator
+    //const {administrator} = req.body
+    const administrator = true;
     if (administrator){
         next()
     }else{
